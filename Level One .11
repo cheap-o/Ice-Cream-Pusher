@@ -1,0 +1,174 @@
+  int xpos = 460;
+  int ypos = 400;
+  int proWidth = 30;
+  int proHeight = 50;
+  int speed = 2;
+  color background = color(100, 255, 200);
+  boolean bound = false;
+  int moved = 0;
+  int i = 0;
+  Tile newTile = new Tile();
+  Tile[] tileArray = {newTile, newTile, newTile};
+  
+  
+void setup() {
+    size(800, 800);
+}
+
+void draw() {
+  noStroke();
+  background(100, 255, 200);
+  moved = xpos;
+  
+  tileArray[0].tileDraw(tileArray[0].tilePositionX-800,tileArray[0].tilePositionY);
+  tileArray[0].tileMove();
+
+
+  tileArray[1].tileDraw(tileArray[1].tilePositionX,tileArray[1].tilePositionY);
+  tileArray[1].tileMove();
+  
+  tileArray[2].tileDraw(tileArray[2].tilePositionX+800,tileArray[2].tilePositionY);
+  tileArray[2].tileMove();
+
+  
+  //newTile.tileDraw();
+  //newTile.tileMove();
+  proDraw(xpos,ypos,proWidth,proHeight);
+  move();
+
+}
+
+
+class Tile{
+  int tilePositionX = 0;
+  int tilePositionY = 0;
+  double adjust; 
+
+  void tileMove(){
+    double adjust = 1;
+    //check for boundry color pixels along left/right sides of protag
+      for (i=0; i<proHeight; i++){
+        if (get(xpos+proWidth+3, ypos+i)==background){
+          bound = true;
+        }
+      }
+      for (i=0; i<proHeight; i++){
+        if (get(xpos-3, ypos+i)==background){
+          bound = true;
+        }
+      }
+    //if the player is to the far right or left his avatar stops moving so the background has to go faster
+    //if (xpos>=700 || xpos<=100){
+      //adjust=1.5;
+    //}
+    //if no boundries were found then move the tile at protag's speed times the adjustment factor
+    if (key == 'd' && bound==false){
+      tilePositionX-=adjust*speed;
+    }
+    if (key == 'a' && bound==false){
+      tilePositionX+=adjust*speed;
+    }
+  bound=false;
+
+      for (i=0; i<proWidth; i++){
+        if (get(xpos+i, ypos+proHeight+3)==background){
+          bound = true;
+        }
+      }
+      for (i=0; i<proWidth; i++){
+        if (get(xpos+i, ypos-3)==background){
+          bound = true;
+        }
+      }  
+    if (key == 's' && bound==false){
+      tilePositionY-=adjust*speed;
+    }
+    if (key == 'w' && bound==false){
+      tilePositionY+=adjust*speed;
+    }
+  bound=false;
+  }
+  
+  void tileDraw(int tilePositionX, int tilePositionY) {
+    rectMode(CORNER);
+    fill(150);
+    rect((.125*width-.125*width/2)+tilePositionX, 0+tilePositionY, 100, height); //vert
+  
+    rect((.375*width-.125*width/2)+tilePositionX, 0+tilePositionY, 100, height);
+  
+    rect((.625*width-.125*width/2)+tilePositionX, 0+tilePositionY, 100, height);
+  
+    rect((.875*width-.125*width/2)+tilePositionX, 0+tilePositionY, 100, height);
+  
+    rect(0+tilePositionX, (.125*height-.125*height/2)+tilePositionY, width, 100); //horz
+  
+    rect(0+tilePositionX, (.375*height-.125*height/2)+tilePositionY, width, 100);
+  
+    rect(0+tilePositionX, (.625*height-.125*height/2)+tilePositionY, width, 100);
+  
+    rect(0+tilePositionX, (.875*height-.125*height/2)+tilePositionY, width, 100);
+  }
+}
+
+
+
+void move(){
+  bound = false;
+
+// move right
+  if (key == 'd' && xpos<700) { 
+    for (int i=0; i<proHeight; i++){
+      if (get(xpos+33,ypos+i)==background){
+       bound = true;
+      }
+    }
+    if (bound == false){
+      xpos = xpos + speed;
+    }
+  }
+  
+// move left  
+  if (key == 'a' && xpos>100) { 
+    for (int i=0; i<proHeight; i++){
+      if (get(xpos-3,ypos+i)==background){
+       bound = true;
+      }
+    }
+    if (bound == false){
+      xpos = xpos - speed;
+    }
+  }
+  
+// move up
+  if (key == 'w') {
+    for (int i=0; i<proWidth; i++){
+      if (get(xpos+i,ypos-3)==background){
+      bound = true;
+      }
+    }
+    if (bound == false){
+      ypos = ypos - speed;
+    }
+  }
+  
+// move down  
+  if (key == 's') { 
+    for (int i=0; i<proWidth; i++){
+      if (get(xpos+i,ypos+53)==background){
+      bound = true;
+      }
+    }
+    if (bound == false){
+      ypos = ypos + speed;
+    }
+  }
+  if (!keyPressed){
+    key = 'p';
+  } 
+  bound = false;
+}
+void proDraw(int xpos, int ypos, int proWidth, int proHeight) {
+  fill(255);
+  rect(xpos, ypos, proWidth, proHeight);
+}
+
